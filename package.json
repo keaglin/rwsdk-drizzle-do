@@ -1,0 +1,62 @@
+{
+  "name": "@redwoodjs/starter-standard",
+  "version": "1.0.0",
+  "description": "Build fast, server-driven webapps on Cloudflare with SSR, RSC, and realtime. ",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "NODE_ENV=${NODE_ENV:-development} vite dev",
+    "dev:init": "rw-scripts dev-init",
+    "preview": "vite preview",
+    "worker:run": "rw-scripts worker-run",
+    "clean": "npm run clean:vite",
+    "clean:vite": "rm -rf ./node_modules/.vite",
+    "release": "rw-scripts ensure-deploy-env && npm run clean && drizzle-kit generate && RWSDK_DEPLOY=1 npm run build && wrangler deploy",
+    "migrate:dev": "drizzle-kit generate && wrangler d1 migrations apply rwsdk-drizzle-do --local",
+    "migrate:prd": "wrangler d1 migrations apply rwsdk-drizzle-do --remote",
+    "migrate:new": "drizzle-kit generate && wrangler d1 migrations new --local && bun run ./src/scripts/seed.ts",
+    "seed": "npm run worker:run ./src/scripts/seed.ts",
+    "generate": "rw-scripts ensure-env && drizzle-kit generate && wrangler types",
+    "check": "npm run generate && npm run types",
+    "types": "tsc",
+    "prepare": "vibe-rules install cursor"
+  },
+  "dependencies": {
+    "@prisma/adapter-d1": "~6.5.0",
+    "@prisma/client": "~6.5.0",
+    "@simplewebauthn/browser": "^13.1.0",
+    "@simplewebauthn/server": "^13.1.1",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "nanoid": "^5.1.5",
+    "rwsdk": "0.0.83"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250517.0",
+    "@libsql/client": "^0.15.6",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "drizzle-kit": "^0.31.1",
+    "prisma": "~6.5.0",
+    "typescript": "^5.8.3",
+    "vibe-rules": "^0.2.31",
+    "vite": "^6.2.6",
+    "wrangler": "^4.15.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "prisma",
+      "sharp",
+      "workerd"
+    ]
+  }
+}
