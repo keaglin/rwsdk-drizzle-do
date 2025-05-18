@@ -1,17 +1,19 @@
 import { db, setupDb } from "@/db";
-import { users } from "@/db/schema";
+import { user } from "@/db/auth-schema";
 import { eq } from "drizzle-orm";
 import { defineScript } from "rwsdk/worker";
 
 export default defineScript(async ({ env }) => {
   setupDb(env);
 
-  await db.delete(users).where(eq(users.id, "1"));
+  await db.delete(user).where(eq(user.id, "1"));
 
-  await db.insert(users).values([
+  await db.insert(user).values([
     {
       id: "1",
-      username: "testuser",
+      name: "testuser",
+      email: "testuser@example.com",
+      emailVerified: true,
     },
   ]);
 
