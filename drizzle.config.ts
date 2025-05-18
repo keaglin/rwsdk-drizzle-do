@@ -3,7 +3,7 @@ import { defineConfig, type Config } from "drizzle-kit";
 
 const baseConfig: Config = {
   out: "./drizzle",
-  schema: "./src/db/schema.ts",
+  schema: ["./src/db/schema.ts", "./src/db/auth-schema.ts"],
   dialect: "sqlite",
 };
 

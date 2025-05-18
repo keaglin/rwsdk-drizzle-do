@@ -1,16 +1,17 @@
-import { defineApp, ErrorResponse } from "rwsdk/worker";
-import { route, render, prefix } from "rwsdk/router";
 import { Document } from "@/app/Document";
-import { Home } from "@/app/pages/Home";
 import { setCommonHeaders } from "@/app/headers";
+import { Home } from "@/app/pages/Home";
 import { userRoutes } from "@/app/pages/user/routes";
-import { sessions, setupSessionStore } from "./session/store";
-import { Session } from "./session/durableObject";
+import { env } from "cloudflare:workers";
+import { eq } from "drizzle-orm";
+import { prefix, render, route } from "rwsdk/router";
+import { defineApp, ErrorResponse } from "rwsdk/worker";
 import { db, setupDb } from "./db";
 import * as schema from "./db/schema";
-import { eq } from "drizzle-orm";
 import type { User } from "./db/types";
-import { env } from "cloudflare:workers";
+import { auth } from "./lib/auth";
+import { Session } from "./session/durableObject";
+import { sessions, setupSessionStore } from "./session/store";
 export { SessionDurableObject } from "./session/durableObject";
 
 export type AppContext = {
@@ -41,7 +42,11 @@ export default defineApp([
     }
 
     if (ctx.session?.userId) {
-      const users = await db.select().from(schema.users).where(eq(schema.users.id, ctx.session.userId)).limit(1);
+      const users = await db
+        .select()
+        .from(schema.users)
+        .where(eq(schema.users.id, ctx.session.userId))
+        .limit(1);
       ctx.user = users[0] || null;
     }
   },
@@ -60,4 +65,5 @@ export default defineApp([
     ]),
     prefix("/user", userRoutes),
   ]),
+  route("/api/auth/**", [({ request }) => auth.handler(request)]),
 ]);
