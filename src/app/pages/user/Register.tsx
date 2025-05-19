@@ -1,49 +1,58 @@
+
 "use client";
-import { useState } from "react";
+import { Button } from "@/app/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
-import { Button } from "@/app/components/ui/button";
-import { MailIcon, LockIcon } from "lucide-react";
 import { authClient } from "@/app/lib/auth-client";
+import { KeyIcon, MailIcon, UserIcon } from "lucide-react";
+import { useState, useTransition } from "react";
 
-export function Login() {
+export function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    console.log("handleLogin");
 
-    if (!email || !password) {
-      setError("Email and password are required");
+    if (!name || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
       return;
     }
 
     try {
       setIsPending(true);
 
-      const result = await authClient.signIn.email({
+      const result = await authClient.signUp.email({
+        name,
         email,
         password,
+        callbackURL: "/login?verified=true",
       });
 
       if (result.error) {
         setError(result.error.message);
       } else {
-        setSuccess("Login successful!");
-        // Redirect after successful login
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
+        setSuccess(
+          "Registration successful! Please check your email to verify your account.",
+        );
+        setName("");
+        setEmail("");
+        setPassword("");
       }
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setIsPending(false);
     }
@@ -52,8 +61,8 @@ export function Login() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>Welcome back! Sign in to your account</CardDescription>
+        <CardTitle>Create Account</CardTitle>
+        <CardDescription>Sign up for a new account</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -69,7 +78,20 @@ export function Login() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div>
+            <div className="relative">
+              <UserIcon.render className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+              <Input.render
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Full Name"
+                className="pl-10 w-full"
+              />
+            </div>
+          </div>
+
           <div>
             <div className="relative">
               <MailIcon.render className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
@@ -88,34 +110,22 @@ export function Login() {
 
           <div>
             <div className="relative">
-              <LockIcon.render className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+              {/* <LockIcon className="absolute left-3 top-3 h-4 w-4 text-slate-500" /> */}
               <Input.render
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                placeholder="Password (min 8 characters)"
                 className="pl-10 w-full"
               />
             </div>
           </div>
 
           <Button.render type="submit" disabled={isPending} className="w-full">
-            {isPending ? "Signing in..." : "Sign in"}
+            {isPending ? "Creating account..." : "Create Account"}
           </Button.render>
         </form>
       </CardContent>
-
-      {/* <CardFooter>
-        <div className="text-sm text-slate-500 w-full text-center">
-          Don't have an account?{" "}
-          <a
-            href="/user/auth/register"
-            className="text-blue-600 hover:underline"
-          >
-            Create account
-          </a>
-        </div>
-      </CardFooter> */}
     </Card>
   );
 }
