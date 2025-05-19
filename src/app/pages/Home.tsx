@@ -19,7 +19,7 @@ export function Home({ ctx }: RequestInfo) {
           </p>
         </div>
 
-        <Card.render>
+        <Card>
           <div className="p-8">
             <div className="text-center mb-6">
               {user ? (
@@ -71,7 +71,7 @@ export function Home({ ctx }: RequestInfo) {
               )}
             </div>
           </div>
-        </Card.render>
+        </Card>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-sm border">
