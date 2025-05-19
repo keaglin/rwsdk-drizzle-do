@@ -14,7 +14,9 @@ interface TabsContextValue {
   onChange: (value: string) => void;
 }
 
-const TabsContext = React.createContext<TabsContextValue | undefined>(undefined);
+const TabsContext = React.createContext<TabsContextValue | undefined>(
+  undefined,
+);
 
 function Tabs({
   defaultValue,
@@ -25,7 +27,7 @@ function Tabs({
   ...props
 }: TabsProps) {
   const [internalValue, setInternalValue] = React.useState(defaultValue || "");
-  
+
   const contextValue = React.useMemo(() => {
     return {
       value: value !== undefined ? value : internalValue,
@@ -45,12 +47,16 @@ function Tabs({
   );
 }
 
-function TabsList({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function TabsList({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
         "flex flex-wrap gap-2 items-center justify-center border-b",
-        className
+        className,
       )}
       {...props}
     >
@@ -59,7 +65,8 @@ function TabsList({ children, className, ...props }: React.HTMLAttributes<HTMLDi
   );
 }
 
-interface TabTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface TabTriggerProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
 }
 
@@ -78,7 +85,7 @@ function TabTrigger({ value, children, className, ...props }: TabTriggerProps) {
         isActive
           ? "border-slate-900 text-slate-900"
           : "border-transparent text-slate-500 hover:text-slate-700",
-        className
+        className,
       )}
       onClick={() => context.onChange(value)}
       type="button"
@@ -110,4 +117,4 @@ function TabContent({ value, children, className, ...props }: TabContentProps) {
   );
 }
 
-export { Tabs, TabsList, TabTrigger, TabContent };
+export { TabContent, Tabs, TabsList, TabTrigger };
