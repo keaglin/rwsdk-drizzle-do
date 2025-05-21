@@ -13,9 +13,6 @@ import Login from "@/app/pages/user/Login";
 import { Register } from "@/app/pages/user/Register";
 import { useState } from "react";
 
-// interface AuthFormProps {
-//   defaultTab?: "login" | "register";
-// }
 const { useSession } = authClient;
 
 // console.log("Card", Card);
@@ -26,17 +23,12 @@ const { useSession } = authClient;
 // console.log("MailIcon", MailIcon);
 
 export function AuthForm() {
-  // console.log("requestInfo", ctx, params, request);
   const [activeTab, setActiveTab] = useState("login");
-  // let activeTab = "login";
-  // const setActiveTab = (tab: string) => {
-  //   activeTab = tab;
-  // };
 
   // Get session data
   const { data: session, isPending: isSessionLoading } = useSession();
 
-  // If the user is already logged in, show a logged-in state
+
   if (session?.user) {
     return (
       <Card>
@@ -60,7 +52,6 @@ export function AuthForm() {
     );
   }
 
-  // Show login/signup forms
   return (
     <AuthLayout>
       <div className="w-full max-w-md mx-auto">
