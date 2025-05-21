@@ -7,7 +7,7 @@ import { env } from "cloudflare:workers";
 import { eq } from "drizzle-orm";
 import { prefix, render, route } from "rwsdk/router";
 import { defineApp, ErrorResponse } from "rwsdk/worker";
-import { db, setupDb } from "./db";
+import { createDrizzleClient } from "./db";
 import * as schema from "./db/auth-schema";
 import type { User } from "./db/types";
 import { Session } from "./session/durableObject";
@@ -24,7 +24,7 @@ export default defineApp([
   setCommonHeaders(),
   async ({ ctx, request, headers }) => {
     // Setup database and session store
-    await setupDb(env);
+    const db = createDrizzleClient(env.DB);
     setupSessionStore(env);
 
     // Try to load session from passkeys
