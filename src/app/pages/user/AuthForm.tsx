@@ -9,7 +9,7 @@ import {
 } from "@/app/components/ui/tabs";
 import { AuthLayout } from "@/app/layouts/AuthLayout";
 import { authClient } from "@/app/lib/auth-client";
-import { Login } from "@/app/pages/user/Login";
+import Login from "@/app/pages/user/Login";
 import { Register } from "@/app/pages/user/Register";
 import { useState } from "react";
 
@@ -51,7 +51,7 @@ export function AuthForm() {
           </p>
           <button
             className="text-blue-600 hover:underline"
-            onClick={() => (window.location.href = "/")}
+            onClick={() => (window.location.href = "/user/profile")}
           >
             Go to dashboard
           </button>

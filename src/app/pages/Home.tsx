@@ -55,13 +55,13 @@ export function Home({ ctx }: RequestInfo) {
 
                   <div className="flex justify-center gap-4">
                     <a
-                      href="/user/login"
+                      href="/user/auth?tab=login"
                       className="px-4 py-2 bg-slate-900 text-white rounded hover:bg-slate-800"
                     >
                       Sign In
                     </a>
                     <a
-                      href="/user/register"
+                      href="/user/auth?tab=register"
                       className="px-4 py-2 bg-white border border-slate-300 rounded hover:bg-slate-50"
                     >
                       Register

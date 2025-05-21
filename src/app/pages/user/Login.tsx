@@ -5,48 +5,56 @@ import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 import { MailIcon, LockIcon } from "lucide-react";
 import { authClient } from "@/app/lib/auth-client";
+import { loginWithEmail } from "./functions";
 
-export function Login() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError("");
     setSuccess("");
-    console.log("handleLogin");
-
-    if (!email || !password) {
-      setError("Email and password are required");
-      return;
-    }
+    setIsPending(true);
 
     try {
-      setIsPending(true);
-
       const result = await authClient.signIn.email({
         email,
         password,
       });
 
       if (result.error) {
-        setError(result.error.message);
+        setError(result.error.message || "Login failed");
       } else {
         setSuccess("Login successful!");
-        // Redirect after successful login
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
       }
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setIsPending(false);
     }
+    // Create new FormData with the React state values
+    // const newFormData = new FormData();
+    // newFormData.append("email", email);
+    // newFormData.append("password", password);
+    
+    // try {
+    //   const result = await loginWithEmail(newFormData);
+    //   if (result.success) {
+    //     setSuccess(result.message ?? "Login successful!");
+    //     // Redirect after successful login
+    //     setTimeout(() => {
+    //       window.location.href = "/";
+    //     }, 1000);
+    //   } else {
+    //     setError(result.error ?? "Login failed");
+    //   }
+    // } catch (err) {
+    //   console.error(err);
+    //   setError(err instanceof Error ? err.message : "Login failed");
+    // } finally {
+    //   setIsPending(false);
+    // }
   };
 
   return (
@@ -69,7 +77,7 @@ export function Login() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form action={handleSubmit} className="space-y-4">
           <div>
             <div className="relative">
               <MailIcon.render className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
