@@ -11,7 +11,7 @@ export function Profile() {
   
   const handleLogout = async () => {
     await authClient.signOut();
-    window.location.href = "/login";
+    window.location.href = "/";
   };
   
   if (isPending) {
