@@ -25,7 +25,17 @@
     "check": "npm run generate && npm run types",
     "types": "tsc",
     "prepare": "vibe-rules install cursor",
-    "auth:db:migrate": "npx @better-auth/cli@latest generate --output src/db/auth-schema.ts && drizzle-kit migrate && drizzle-kit migrate"
+    "auth:db:migrate": "npx @better-auth/cli@latest generate --output src/db/auth-schema.ts && drizzle-kit migrate && drizzle-kit migrate",
+    "db:generate": "bun drizzle-kit generate --config=drizzle-prod.config.ts",
+    "db:migrate": "bun drizzle-kit migrate --config=drizzle-prod.config.ts",
+    "db:push": "bun drizzle-kit push --config=drizzle-prod.config.ts",
+    "db:studio": "bun drizzle-kit studio --config=drizzle-prod.config.ts",
+    "db:pull": "bun drizzle-kit introspect --config=drizzle-prod.config.ts",
+    "local:db:generate": "bun drizzle-kit generate --config=drizzle-dev.config.ts",
+    "local:db:migrate": "bun drizzle-kit migrate --config=drizzle-dev.config.ts",
+    "local:db:pull": "bun drizzle-kit introspect --config=drizzle-dev.config.ts",
+    "local:db:push": "bun drizzle-kit push --config=drizzle-dev.config.ts",
+    "local:db:studio": "bun drizzle-kit studio --config=drizzle-dev.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.13",

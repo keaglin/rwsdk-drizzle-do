@@ -9,7 +9,6 @@ const baseConfig: Config = {
 
 const localConfig = {
   ...baseConfig,
-  // driver: 'd1-http',
   dbCredentials: {
     url: ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/da776eea6bd3b7c2d10705bc5e15ddb1d6d3ba55563b1e2b83bfa0eef61bd63b.sqlite",
     dbName: "rwsdk-drizzle-do",
