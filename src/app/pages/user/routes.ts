@@ -1,5 +1,4 @@
 import { auth } from "@/app/lib/auth";
-import { sessions } from "@/session/store";
 import { route } from "rwsdk/router";
 import { AuthForm } from "./AuthForm";
 import { Profile } from "./Profile";

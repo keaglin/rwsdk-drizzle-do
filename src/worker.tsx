@@ -6,13 +6,10 @@ import { userRoutes } from "@/app/pages/user/routes";
 import { env } from "cloudflare:workers";
 import { eq } from "drizzle-orm";
 import { prefix, render, route } from "rwsdk/router";
-import { defineApp, ErrorResponse } from "rwsdk/worker";
+import { defineApp } from "rwsdk/worker";
 import { createDrizzleClient } from "./db";
 import * as schema from "./db/auth-schema";
-import type { User } from "./db/types";
-import { Session } from "./session/durableObject";
-import { sessions, setupSessionStore } from "./session/store";
-export { SessionDurableObject } from "./session/durableObject";
+import type { Session, User } from "better-auth";
 
 export type AppContext = {
   session: Session | null;
@@ -28,15 +25,17 @@ export default defineApp([
 
     // Check for better-auth session
     try {
-      const authSession = await auth.api.getSession({ headers });
+      const authSession = await auth.api.getSession({ headers: request.headers });
+      console.log("authSession", authSession);
       if (authSession?.user) {
         ctx.user = authSession.user;
+        ctx.session = authSession.session;
       }
     } catch (error) {
-      // Ignore auth errors
+      console.log("Auth session error:", error);
     }
 
-    // If we have a passkey session but no user yet, try to load the user
+    // If we have a session but no user yet, try to load the user from db
     if (!ctx.user && ctx.session?.userId) {
       const users = await db
         .select()
