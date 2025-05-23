@@ -25,16 +25,6 @@ export default defineApp([
   async ({ ctx, request, headers }) => {
     // Setup database and session store
     const db = createDrizzleClient(env.DB);
-    setupSessionStore(env);
-
-    // Try to load session from passkeys
-    try {
-      ctx.session = await sessions.load(request);
-    } catch (error) {
-      if (error instanceof ErrorResponse && error.code === 401) {
-        await sessions.remove(request, headers);
-      }
-    }
 
     // Check for better-auth session
     try {
@@ -67,7 +57,7 @@ export default defineApp([
       // Middleware to check authentication
       ({ ctx, headers }) => {
         if (!ctx.user) {
-          headers.set("Location", "/user/login");
+          headers.set("Location", "/user/auth");
           return new Response(null, {
             status: 302,
             headers,
