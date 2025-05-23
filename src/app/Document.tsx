@@ -1,5 +1,3 @@
-// import styles from "./styles.css";
-
 export const Document: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
